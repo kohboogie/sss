@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; 
+    background-color: whitesmoke;
+    font-family: "Viaoda Libre", "Eulyoo1945";
+    position: relative;
+}
+
+p1 {
+    font-size: 15px;
+}
+
+.logo {
+    z-index: 3;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+}
+
+.intro-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1.7;
+    color: black;
+    font-size: 25px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; 
+    gap: 10px; 
+    z-index: 10; 
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    background-color: lightgray;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.plus-button {
+    background-color: lightgray;
+    font-size: 40px;
+    cursor: pointer;
+    text-align: center;
+    width: 100px;
+    height: 100px; 
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+}
+
+.plus-button:hover {
+    background-color: gray;
+}
+
+.button:hover {
+    background-color: gray;
+}
+
+.info {
+    z-index: 999;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: black;
+}
+
+.info button {
+    background-color: lightgray;
+    padding: 10px 20px;
+    font-family: "Viaoda Libre";
+    color: black;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    font-size: 28px;
+    display: none;
+    justify-content: center;
+    line-height: 1.7;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: auto;
+    z-index: 1000;
+}
+
+.popup-content {
+    font-family: "Eulyoo1945";
+    text-align: center;
+    max-width: 1000px;
+}
+
+canvas {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 800px;
+    height: auto;
+}
+
+.save {
+    position: fixed;
+    top: 50%;
+    left: 93%;
+    z-index: 1000;
+}
+
+.image-container {
+    position: relative;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.image {
+    display: none; 
+    transition: opacity 5s ease-in-out;
+    max-width: 70%; 
+    margin: 20px 0;
+}
+

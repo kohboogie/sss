@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リリイ・シュシュのすべて - Interactive Score</title>
+    <link href="https://fonts.googleapis.com/css2?family=Viaoda+Libre&display=swap" rel="stylesheet">
+
+    <style>
+        @font-face {
+            font-family: "Eulyoo1945";
+            src: url('./fonts/Eulyoo1945-Regular.otf');
+        }
+        @font-face {
+            font-family: "Eulyoo1945";
+            src: url('./fonts/Eulyoo1945-Bold.otf');
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: whitesmoke;
+            font-family: "Eulyoo1945","Viaoda Libre";
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+        }
+
+        .text {
+            position: absolute;
+            top: 300px;
+            left: 20px;
+            line-height: 2;
+            color: black;
+            font-size: 1.8vw;
+        }
+
+        .text-viaoda {
+            font-family: "Viaoda Libre", serif;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: black;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-family: "Viaoda Libre";
+            color: black;
+            font-size: 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: black;
+        }
+
+        .info button {
+            padding: 10px 20px;
+            font-family: "Viaoda Libre";
+            color: black;
+            font-size: 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .save {
+            position: fixed;
+            top: 50%;
+            left: 92.5%;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <!-- 로고 -->
+    <img src="logo.svg" class="logo" alt="logo">
+    
+    <span class="save" data-v-659b6ee0="">"S" for Screenshot</span>
+    
+    <!-- 컨트롤 -->
+    <div class="controls">
+        <button id="playPauseBtn">Play</button>
+    </div>
+
+    <div class="info">
+        <button id="infoBtn">Information</button>
+    </div>
+
+    <!-- 캔버스 -->
+    <canvas id="scoreCanvas" width="800" height="800"></canvas>
+
+    <!-- 오디오 -->
+    <audio id="background-music" src="glide.mp3" preload="auto"></audio>
+
+    <script>
+        const canvas = document.getElementById('scoreCanvas');
+        const ctx = canvas.getContext('2d');
+        const images = [ './images/green.jpg']; // 로컬 이미지를 사용
+        let loadedImages = [];
+        let isPlaying = false;
+
+        // 이미지 로드 상태 디버깅
+        images.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                loadedImages.push(img);
+                if (loadedImages.length === images.length) {
+                    drawImages(); // 모든 이미지가 로드되면 그리기 시작
+                }
+            };
+            img.onerror = () => {
+                console.error(`${src} 이미지 로드 실패. 경로를 확인하세요.`);
+            };
+        });
+
+        // 이미지 그리기 및 왜곡 효과
+        function drawImages() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            loadedImages.forEach(img => {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            });
+        }
+
+        // 마우스 이동에 따라 이미지 왜곡
+        canvas.addEventListener('mousemove', (event) => {
+            const x = event.clientX / window.innerWidth - 0.5;
+            const y = event.clientY / window.innerHeight - 0.5;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            loadedImages.forEach(img => {
+                const dx = x * 50;  // 왜곡 정도
+                const dy = y * 50;
+                ctx.save();
+                ctx.transform(1, dx / 100, dy / 100, 1, 0, 0); // 왜곡 효과 적용
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                ctx.restore();
+            });
+        });
+
+        // 스크린샷 기능
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 's' || event.key === 'S') {
+                try {
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');  // 캔버스를 이미지로 변환
+                    link.download = 'screenshot.png';
+                    link.click();
+                } catch (error) {
+                    console.error('스크린샷 저장 실패:', error);
+                }
+            }
+        });
+
+        // 재생/일시정지 버튼 클릭 이벤트
+        const audio = document.getElementById('background-music');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        playPauseBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    playPauseBtn.textContent = 'Pause';
+                }).catch(error => {
+                    console.error("오디오 재생 오류:", error);
+                });
+            } else {
+                audio.pause();
+                playPauseBtn.textContent = 'Play';
+            }
+            isPlaying = !isPlaying;
+        });
+    </script>
+
+</body>
+</html>
+
+
+
