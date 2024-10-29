@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>릴리 슈슈의 모든 것</title>
+    <link href="https://fonts.googleapis.com/css2?family=Viaoda+Libre&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: "Eulyoo1945";
+            src: url('./fonts/Eulyoo1945-Regular.otf');
+        }
+        @font-face {
+            font-family: "Eulyoo1945";
+            src: url('./fonts/Eulyoo1945-Bold.otf');
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: "Eulyoo1945", "Viaoda Libre", sans-serif;
+            overflow: hidden;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* 1 */
+        .main-screen {
+            background: url('grass.jpg') no-repeat center center/cover;
+            cursor: none;
+            opacity: 1;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+        }
+
+        .title {
+            font-family: "Eulyoo1945", sans-serif;
+            font-size: 6.5vw;
+            color: white;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+        }
+
+        .ant {
+            position: absolute;
+            background-image: url('antwalk.gif');
+            background-size: cover;
+            width: 50px;
+            height: 50px;
+        }
+
+        /* 2 */
+        .text-screen {
+            background-color: black;
+            color: white;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .typing-text {
+        	font-family:"Viaoda Libre";
+            text-shadow: 0px 0px 15px #ffffff;
+            font-size: 6vw;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .fade-in {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1 -->
+    <div class="screen main-screen">
+        <img src="logo.svg" class="logo" alt="logo">
+        <h1 class="title">《リリイ・シュシュのすべて》</h1>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+        <span class="ant"></span>
+    </div>
+
+    <!-- 2 -->
+    <div class="screen text-screen">
+        
+        <h1 class="typing-text" id="typingText">
+            《All about Lily Chou-Chou》<br>A Shunji Iwai Film
+        </h1>
+    </div>
+
+    
+    <audio id="background-music" src="arabe.mp3" preload="auto"></audio>
+
+    <script>
+        const ants = document.querySelectorAll('.ant');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+       
+        window.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        ants.forEach(ant => {
+            ant.x = Math.random() * window.innerWidth;
+            ant.y = Math.random() * window.innerHeight;
+            ant.speed = 1 + Math.random();
+            ant.style.left = ant.x + 'px';
+            ant.style.top = ant.y + 'px';
+        });
+
+        function animateAnts() {
+            ants.forEach(ant => {
+                const dx = mouseX - ant.x;
+                const dy = mouseY - ant.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const angle = Math.atan2(dy, dx);
+                const randomFactor = (Math.random() - 0.5) * 2;
+
+                if (distance > 50) {
+                    ant.x += (Math.cos(angle) * ant.speed) + randomFactor;
+                    ant.y += (Math.sin(angle) * ant.speed) + randomFactor;
+                }
+
+                ant.style.left = ant.x + 'px';
+                ant.style.top = ant.y + 'px';
+                ant.style.transform = `rotate(${angle}rad)`;
+            });
+
+            requestAnimationFrame(animateAnts);
+        }
+
+        animateAnts(); 
+
+        const mainScreen = document.querySelector(".main-screen");
+        const textScreen = document.querySelector(".text-screen");
+        const typingText = document.querySelector("#typingText");
+        const audio = document.getElementById("background-music");
+
+    
+        mainScreen.addEventListener('click', () => {
+            mainScreen.classList.add('fade-out'); 
+            setTimeout(() => {
+                mainScreen.style.display = 'none'; 
+                textScreen.classList.add('fade-in'); 
+                startTyping();  
+                playMusic(); 
+            }, 1000); 
+        });
+
+        function playMusic() {
+            audio.play().catch(error => {
+                console.error("음악을 재생할 수 없습니다:", error);
+            });
+        }
+
+        
+        let i = 0;
+        const textContent = typingText.innerHTML.split("");
+        typingText.innerHTML = ""; 
+
+        function startTyping() {
+            if (i < textContent.length) {
+                if (textContent[i] === "<") {
+                   
+                    let tag = "";
+                    while (textContent[i] !== ">" && i < textContent.length) {
+                        tag += textContent[i];
+                        i++;
+                    }
+                    tag += ">";
+                    typingText.innerHTML += tag;
+                } else {
+                    typingText.innerHTML += textContent[i];
+                }
+                i++;
+                setTimeout(startTyping, 100);  
+            } else {
+                
+                setTimeout(() => {
+                    window.location.href = "glide.html";  
+                }, 1000); 
+            }
+        }
+    </script>
+</body>
+</html>
+
+

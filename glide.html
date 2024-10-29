@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>릴리 슈슈의 모든 것</title>
+    <link href="https://fonts.googleapis.com/css2?family=Viaoda+Libre&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <!-- 로고 -->
+    <img src="logo.svg" class="logo" alt="logo">
+
+    <!-- 중앙 텍스트 -->
+    <div class="intro-text" id="introText">Press song title to play OST. <br> Press + to take photo.</div>
+
+    <!-- 버튼 컨테이너 (하단 배치) -->
+    <div class="button-container" id="buttonContainer">
+        <div class="button-group">
+            <div class="button" id="glideBtn">1. Glide</div>
+            <div class="button" id="tobenaiBtn">2. Tobenai Tsubasa</div>
+        </div>
+        <div class="plus-button" id="plusBtn">+</div>
+    </div>
+
+    <!-- 스크롤바 -->
+<!--     <div class="scrollbar__wrapper">
+        <div class="scrollbar__vertical"></div>
+        <div class="scrollbar__index-wrapper">
+            <div class="scrollbar__index-divide"><div class="scrollbar__index-number">1</div></div>
+            <div class="scrollbar__index-divide"><div class="scrollbar__index-number">2</div></div>
+            <div class="scrollbar__index-divide"><div class="scrollbar__index-number">3</div></div>
+            <div class="scrollbar__index-divide"><div class="scrollbar__index-number">4</div></div>
+            <div class="scrollbar__index-divide"><div class="scrollbar__index-number">5</div></div>
+        </div>
+    </div> -->
+
+    <div class="info">
+        <button id="infoBtn">Information</button>
+    </div>
+
+    <!-- 팝업 -->
+    <div class="popup" id="infoPopup">
+        <div class="popup-content">
+            <h2 style="text-shadow: 0px 0px 15px #ffffff;">《릴리 슈슈의 모든 것》, 2001, 이와이 슌지</h2>
+            <p><br><br>
+                열네 살 소년 유이치는 가상의 가수 릴리 슈슈의 노래를 사랑한다. <br>
+                하지만 둘도 없는 단짝 친구였던 호시노가 돌연 반 아이들의 리더가 되어 자신을 <br>왕따시키고 유이치의 첫사랑인 쿠노마저 괴롭힌다. <br>
+                짝사랑하는 여자애를 도와줄 수도 없는 유이치의 학교생활은 가혹하기만 하다. <br>
+                그런 유이치의 유일한 안식처는 영혼을 뒤흔드는 ‘릴리 슈슈’의 노래 뿐... <br>그러나 현실은 노래로 감출 만큼 만만하지 않다.<br>
+                암울한 현실에서 도망쳐 릴리 슈슈의 노래만을 유일한 안식처로 여기던 그는 팬클럽 운영에 더욱 빠져 든다.<br><br>
+                웹을 통해 ‘릴리 슈슈의 모든 것’을 느껴보자.
+            </p>
+            <p1><br><br><br><br>Copyright&copy; 2024 Seoyoung Koh.</p1>
+        </div>
+    </div>
+
+<canvas id="scoreCanvas" width="800" height="600"></canvas>
+
+    <!-- 이미지 컨테이너 -->
+    <div class="image-container" id="imageContainer"></div>
+    <!-- 오디오 -->
+    <audio id="glideMusic" src="glide.mp3" preload="auto"></audio>
+    <audio id="wingsMusic" src="wings.mp3" preload="auto"></audio>
+
+    <span class="save" data-v-659b6ee0="">
+    Press "S" for Screenshot</span>
+
+
+
+    <script src="script.js"></script> <!-- Custom JS file -->
+</body>
+</html>

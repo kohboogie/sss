@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>릴리 슈슈의 모든 것</title>
+    <link href="https://fonts.googleapis.com/css2?family=Viaoda+Libre&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="cam.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- 로고 -->
+    <img src="logo.svg" class="logo">
+
+    <!-- 버튼 컨테이너 -->
+    <div class="button-container" id="buttonContainer">
+        <div class="button-group">
+            <div class="button" id="glideBtn">1. Glide</div>
+            <div class="button" id="tobenaiBtn">2. Tobenai Tsubasa</div>
+        </div>
+        <a href="glide.html"><div class="plus-button" id="plusBtn">x</div></a>
+    </div>
+
+    <!-- 웹캠 배경 -->
+    <video id="webcam" autoplay muted></video>
+
+    <!-- 텍스트 애니메이션 -->
+    <div class="popup" id="popup">
+        <div class="popup-content" id="popupContent"></div>
+    </div>
+
+    <span class="save">Press "S" for Screenshot</span>
+
+    <script>
+           
+    const webcam = document.getElementById('webcam');
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => { webcam.srcObject = stream; })
+            .catch(error => { console.error("웹캠 접근 실패:", error); });
+    }
+
+        const glideBtn = document.getElementById('glideBtn');
+        const tobenaiBtn = document.getElementById('tobenaiBtn');
+        const popup = document.getElementById('popup');
+        const popupContent = document.getElementById('popupContent');
+        const glideText = `《Glide》 I wanna be I wanna be I wanna be just like a melody just like a simple sound like in harmony I wanna be I wanna be I wanna be just like the sky just fly so far away to another place To be away from all to be one of everything I wanna be I wanna be I wanna be just like the wind just flowing in the air through an open space I wanna be I wanna be I wanna be just like the sea just swaying in the water so to be at ease To be away from all to be one of everything I wanna be I wanna be I wanna be just life a melody just like a simple sound like in harmony
+`; // Glide 텍스트 축약
+        const tobenaiText = `《飛べない翼》 校庭が歪んで見えた白い体操着が見えた カラスが低く空飛んだ 黒い羽を 少しだけ分けてください 空に伸びた階段 そこまで手が届かない 夕暮れの空はあかく みんなの視線 冷たく そして大きな石が 空から落ちてきて あたしを押しつぶす 私の心には見えた 取り残されていくものが あなたの言いわけや嘘は 何の役にも立たない がらくたのよう 空に伸びた階段 そこまで手が届かない 夕暮れの空はあかく みんなの視線 冷たく そして大きな雲が 空から降りてきて あたしを隠していく 機嫌直して生きよう 空のきれまからこぼれる 光がまた動いてくるよ 夕暮れの空はあかく もうすぐに暮れてしまう だから飛べない翼を 捨てたら 捨てたなら あたしは舞い上がろう だから飛べない翼を 捨てたら 捨てたなら あたしは舞い上がろう`; // Tobenai 텍스트 축약
+let audio = null;
+    let typingInterval = null;
+    let isPlaying = false;
+
+    function stopAudioAndText() {
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+        if (typingInterval) clearInterval(typingInterval);
+        popupContent.innerText = '';
+        popup.style.display = 'none';
+        isPlaying = false; // 상태 초기화
+    }
+
+    function showTextAnimation(text) {
+        popupContent.innerText = '';
+        popup.style.display = 'flex';
+        let index = 0;
+        typingInterval = setInterval(() => {
+            if (index < text.length) {
+                popupContent.innerText += text[index++];
+            } else {
+                clearInterval(typingInterval);
+            }
+        }, 50);
+    }
+
+    function toggleAudioAndText(audioFile, text) {
+        if (audio && audio.src.includes(audioFile) && isPlaying) {
+            stopAudioAndText();  // 재생 중인 상태에서 같은 버튼 클릭 시 정지
+        } else {
+            stopAudioAndText();  // 기존 재생을 멈추고 새 오디오 및 텍스트 시작
+            audio = new Audio(audioFile);
+            audio.play();
+            showTextAnimation(text);
+            isPlaying = true; // 재생 상태 설정
+        }
+    }
+
+    // Glide 버튼 클릭 시 재생/정지 기능
+    glideBtn.addEventListener('click', () => {
+        toggleAudioAndText('glide.mp3', glideText);
+    });
+
+    // Tobenai 버튼 클릭 시 재생/정지 기능
+    tobenaiBtn.addEventListener('click', () => {
+        toggleAudioAndText('wings.mp3', tobenaiText);
+    });
+
+ async function takeScreenshot() {
+        try {
+            // 화면 캡처 스트림 요청
+            const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            const track = stream.getVideoTracks()[0];
+            const imageCapture = new ImageCapture(track);
+
+            // 캡처 이미지 데이터 가져오기
+            const bitmap = await imageCapture.grabFrame();
+            const canvas = document.createElement('canvas');
+            canvas.width = bitmap.width;
+            canvas.height = bitmap.height;
+            const context = canvas.getContext('2d');
+            context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+            // 이미지 다운로드
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'screenshot.png';
+            link.click();
+
+            // 트랙 및 스트림 정리
+            track.stop();
+        } catch (error) {
+            console.error("스크린샷 실패:", error);
+        }
+    }
+
+    // S 키로 스크린샷 촬영
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 's' || event.key === 'S') {
+            takeScreenshot();
+        }
+    });
+    </script>
+</body>
+</html>
